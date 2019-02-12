@@ -38,14 +38,13 @@ infix operator `(***)` which approximates exponentiation.
 
 Current implementation: `dependencies/non-integer` of `fm-ledger-rules@727cca6`
 
-All input parameters for the functions need to be instances of `RealFrac` in
-order to support addition, subtraction, multiplication and division. The
-approximation algorithm terminates if the basic operations terminate. The
-approximation is recursive, the recursion depth is bounded by both a fixed
+All input parameters for the functions need to support addition, subtraction,
+multiplication and division. The approximation algorithm terminates if the basic
+operations terminate. The approximation is incremental, bounded by both a fixed
 constant and the precision of succeeding incremental approximations.
 
-The infix `(***)` operator uses both `ln` and `exp` in the following way
-`a *** b = exp' (b * ln' a)`.
+Exponentiation `x^y` is approximated via `x^y = exp(ln(x^y)) = exp(y*ln(x))`,
+using `exp'` and `ln'`.
 
 # Technical explanation
 [technical-explanation]: #technical-explanation
@@ -56,6 +55,31 @@ each function, there exists a continued fraction representation (e.g.,
 [exp](http://functions.wolfram.com/ElementaryFunctions/Exp/10/)). Continued
 fractions can easily be calculated recursive using via a recurrence
 relation which results in an intermediate approximation after each step.
+
+Calculating continued fractions in pseudo code,
+
+```
+// let a be the vector of the partial numerators, a[i] the i-th partial numerator
+// let b be the vector of the partial denomiators, b[i] the i-th partial denominator
+
+// result: vectors A / B where A[n]/B[n] is the n-th convergent for n >= 0
+
+// initialize
+A[-1] := 1
+B[-1] := 0
+A[0]  := b_0
+B[0]  := 1
+
+n := 0
+
+while(not_precise_enough())
+  A[n+1] := b[n+1] * A[n] + a[n+1] * A[n-1]
+  B[n+1] := b[n+1] * B[n] + a[n+1] * B[n-1]
+  n := n + 1
+
+return (A[n]/B[n])
+
+```
 
 Continued fractions do have advantages over finite Taylor / MacLaurin polynomial
 approximations:
