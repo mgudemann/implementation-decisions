@@ -97,7 +97,26 @@ the function for decay where large parameters lead to very close to full decay, 
   shifts instead of multiplications, i.e., increased efficiency.
 
 - Taylor series approximation of `ln` seem to converge extremely slow, continued
-  fractions have been shown to be much faster in experiments.
+  fractions have been shown to be much faster in experiments. See below for
+  results (finite Taylor polynomial vs. non-scaled continued fraction).
+
+  The following graphs show the relative error `|exp'(x) - exp(x)|/|exp(x)|` and
+  `|ln'(x) - ln(x)|/|ln(x)|`:
+
+  Finite Taylor series with 10/20/50 iterations for `ln`:
+![Taylor Series Approximation of `ln` (10,20,50 Iterations)](ln_taylor.png)
+
+  Continued Fraction Approximation with 10/20/50 iterations for `ln`:
+![Continued Fraction Approximation of `ln` (10,20,50 Iterations)](ln_cf.png)
+
+  For the exponential function, the difference is less pronounced, but still
+  significant
+
+  Finite Taylor series with 10/20 iterations for `exp`:
+![Taylor Series Approximation of `exp` (10,20 Iterations)](taylor_exp.png)
+
+  Continued Fraction Approximation with 10/20 iterations for `exp`:
+![Continued Fraction Approximation of `exp` (10,20,50 Iterations)](cf_exp.png)
 
 - Using scaling as above, we might also be able to get good convergence using a
   finite Taylor / MacLaurin series approximation.
