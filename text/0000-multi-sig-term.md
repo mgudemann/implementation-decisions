@@ -1,5 +1,5 @@
 - Feature Name: native multi-sig term
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
+- Start Date: 2019-07-23
 - RFC PR: (leave this empty)
 
 # Summary
@@ -131,7 +131,8 @@ keyhash = bytes .size 32
 maximal value of `23` for `m` in a `m` out of `n` multi-sig scheme.
 
 For example, a `RequireSignature kh` term for an example key for Alice is
-encoded as follows (36 bytes):
+encoded as follows (36 bytes), first in CBOR diagnostic notation and then as raw
+bytes:
 
 ```haskell
 [0, h'C9C65B1126BCF95573B9C5CF99828B01ABF5E492DBF3B0A4D46444E8ABB30E8F']
