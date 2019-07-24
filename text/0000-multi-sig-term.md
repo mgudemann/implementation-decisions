@@ -46,15 +46,15 @@ The recursive structure of a multi-sig term is of the form:
  - `RequireSignature kh` where `kh` is a hashed key
  - `RequireAllOf [msigs]` where `[msigs]` is a list of multi-sig terms
  - `RequireAnyOf [msisg]` where `[msigs]` is a list of multi-sig terms
- - `RequireMOf m [msig]` where `m` is a natural and `[msigs]` is a list of
+ - `RequireMOf m [msigs]` where `m` is a natural and `[msigs]` is a list of
    multi-sig terms
 
-This forms a tree-like structure where each node is of the form
+This forms a tree-like structure where each leaf is of the form
 `RequireSignature kh`. Leafs of the form `RequireAllOf` or `ReuquireMOf 0` with
 an empty argument list of multi-sig terms are redundant in the sense that they
-evaluate to `True`. Leaf terms of the form `RequireAnyOf` or `RequireMOf m`
-with `m>0` with an empty list of multi-sig terms is also redundant and evaluates
-to `False`.
+evaluate to `True`. Leaf terms of the form `RequireAnyOf` or `RequireMOf m` with
+`m>0` with an empty list of multi-sig terms is also redundant and evaluates to
+`False`.
 
 ### Examples
 
@@ -99,7 +99,8 @@ aliceAndBobOrCarlAndDaria = RequireAnyOf
 `RequireAnyOf [msigs]` and `RequireMOf 1 [msigs]` are logically equivalent, just
 as `RequireAllOf [msigs]` and `RequireMOf (length msisg) [msigs]`. From a point
 of readability and to a lesser part also for encoding size, it makes sense to
-have the special case terms for _any_ and _all_.
+have the special case terms for _any_ and _all_. It also provides a useful
+extension point for later additions, e.g., hash locks and time locks.
 
 # Technical explanation
 [technical-explanation]: #technical-explanation
@@ -126,9 +127,6 @@ msig =
 
 keyhash = bytes .size 32
 ```
-
-*Note* the encoding of `m` into a major type `0` single byte allows for a
-maximal value of `23` for `m` in a `m` out of `n` multi-sig scheme.
 
 For example, a `RequireSignature kh` term for an example key for Alice is
 encoded as follows (36 bytes), first in CBOR diagnostic notation and then as raw
@@ -338,3 +336,6 @@ data and redeemer scripts) and minimal for full Plutus support.
 The presented scheme does not resolve the problem of the communication that is
 necessary for parties to agree and collectively sign a transaction for a
 multi-signature scheme.
+
+In the current form there is no overall size limit of the multi-signature
+scripts, and there is no relation to transaction fees.
